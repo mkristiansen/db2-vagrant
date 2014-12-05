@@ -16,8 +16,19 @@ privateSubnet = privateNetworkIp.split(".")[0...3].join(".")
 privateStartingIp = privateNetworkIp.split(".")[3].to_i
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "centos65-x86_64-20140116"
-  config.vm.box_url = "https://github.com/2creatives/vagrant-centos/releases/download/v6.4.2/centos64-x86_64-20140116.box"
+
+  # Choose whether to use vaggrant-vbguest plugin to update VirtualBox Guest Additions.
+  if Vagrant.has_plugin?("vagrant-vbguest")  
+    config.vbguest.auto_update = false
+  end
+
+  # Use vaggrant-cachier - Configure cached packages to be shared between instances of the same base box.
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+  end
+
+  config.vm.box = "chef/centos-6.6"
+  config.vm.box_url = "https://vagrantcloud.com/chef/boxes/centos-6.6"
   config.vm.define "db2-express" do |master|
     master.vm.network :public_network
     master.vm.network :private_network, ip: "#{privateSubnet}.#{privateStartingIp}", virtualbox__intnet: "db2network"
