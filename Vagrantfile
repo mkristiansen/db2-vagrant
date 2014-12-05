@@ -27,17 +27,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.vmx["memsize"]  = "#{ram}"
     end
     master.vm.provider :virtualbox do |v|
-      v.name = "IBM DB2 Express-C 10.5"
+      v.name = "db2-express"
       v.customize ["modifyvm", :id, "--memory", "#{ram}"]
       file_to_disk = File.realpath( "." ).to_s + "/" + v.name + "_secondary_hdd.vdi"
       if ARGV[0] == "up" && ! File.exist?(file_to_disk)
-        v.customize ['storagectl', :id, '--name', 'SATA', '--portcount', 2, '--hostiocache', 'on']
+        
+        v.customize ['storagectl', :id, '--add', 'sata', '--name', 'SATA', '--portcount', 2, '--hostiocache', 'on']
         v.customize ['createhd', '--filename', file_to_disk, '--format', 'VDI', '--size', "#{secondaryStorage * 1024}"]
         v.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
       end
     end
-
+    
     master.vm.provision :shell, :path => "provision_for_mount_disk.sh"
-    master.vm.provision :shell, :path => "db2-rsp.sh"
+    master.vm.provision :shell, :path => "db2.sh"
   end
 end
