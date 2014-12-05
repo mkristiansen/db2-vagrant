@@ -3,14 +3,14 @@
 # This is needed because we must sync 64 bit packages to 32 bit ones
 yum update -y
 
-yum install -y wget nfs-utils libaio* ksh compat-libstdc++* libstdc++* numactl.x86_64 pam.i686 yum install libstdc++.i686
+yum install -y wget nfs-utils libaio* ksh compat-libstdc++* libstdc++* numactl.x86_64 pam.i686 install libstdc++.i686 kernel-develop
 
-cp /vagrant/v10.5fp1_linuxx64_expc.tar.gz /tmp
+cp /vagrant/v10.5_linuxx64_expc.tar.gz /tmp
 cd /tmp
 
-tar -xvf v10.5fp1_linuxx64_expc.tar.gz
+tar -xvf v10.5_linuxx64_expc.tar.gz
 
-rm -f v10.5fp1_linuxx64_expc.tar.gz
+rm -f v10.5_linuxx64_expc.tar.gz
 
 # Launch the installer
 /tmp/expc/db2_install -n -b /opt/ibm/db2/V10.5  -p expc
