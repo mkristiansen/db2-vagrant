@@ -43,23 +43,23 @@ echo 'ibm-db2 523/tcp # IBM DB2 DAS' >> /etc/services
 echo 'ibm-db2 523/udp # IBM DB2 DAS' >> /etc/services
 echo 'db2c_db2inst1 50000/tcp # IBM DB2 instance - db2inst1' >> /etc/services
 
-sudo -u db2inst1 /opt/ibm/db2/V10.5/bin/db2 update dbm cfg using SVCENAME db2c_db2inst1
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2COMM=tcpip
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_EXTENDED_OPTIMIZATION=ON
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_DISABLE_FLUSH_LOG=ON
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set AUTOSTART=YES
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_HASH_JOIN=Y
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_PARALLEL_IO=*
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2CODEPAGE=1208
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_COMPATIBILITY_VECTOR=3F
-sudo -u db2inst1 /opt/ibm/db2/V10.5/bin/db2 update dbm cfg using INDEXREC ACCESS
+sudo -i -u db2inst1 /opt/ibm/db2/V10.5/bin/db2 update dbm cfg using SVCENAME db2c_db2inst1
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2COMM=tcpip
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_EXTENDED_OPTIMIZATION=ON
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_DISABLE_FLUSH_LOG=ON
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set AUTOSTART=YES
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_HASH_JOIN=Y
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_PARALLEL_IO=*
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2CODEPAGE=1208
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2set DB2_COMPATIBILITY_VECTOR=3F
+sudo -i -u db2inst1 /opt/ibm/db2/V10.5/bin/db2 update dbm cfg using INDEXREC ACCESS
 
 # Start the instance
-sudo -u db2inst1 /home/db2inst1/sqllib/adm/db2start
+sudo -i -u db2inst1 /home/db2inst1/sqllib/adm/db2start
 
 # Start the administration server
-sudo -u dasusr1 /home/dasusr1/das/bin/db2admin stop
-sudo -u dasusr1 /home/dasusr1/das/bin/db2admin start
+sudo -i -u dasusr1 /home/dasusr1/das/bin/db2admin stop
+sudo -i -u dasusr1 /home/dasusr1/das/bin/db2admin start
 
 # Autostart
 su - db2inst1
