@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "db2-express" do |master|
-    master.vm.network :public_network
+#    master.vm.network :public_network
     master.vm.network :private_network, ip: "#{privateSubnet}.#{privateStartingIp}", virtualbox__intnet: "db2network"
     master.vm.hostname = "db2-express"
 
