@@ -29,6 +29,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "chef/centos-6.6"
   config.vm.box_url = "https://vagrantcloud.com/chef/boxes/centos-6.6"
+
+  config.vm.provider :parallels do |p, override|
+      override.vm.box = "parallels/centos-6.5"
+  end
+
   config.vm.define "db2-express" do |master|
     master.vm.network :public_network
     master.vm.network :private_network, ip: "#{privateSubnet}.#{privateStartingIp}", virtualbox__intnet: "db2network"
@@ -37,18 +42,36 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     master.vm.provider "vmware_fusion" do |v|
       v.vmx["memsize"]  = "#{ram}"
     end
+    
+    master.vm.provider :parallels do |p|
+      p.name = "db2-express"
+      p.memory = ram
+      
+      file_to_disk = File.realpath( "." ).to_s + "/" + p.name + "_secondary_hdd"
+      if ARGV[0] == "up" 
+        if ! Dir.exist?(file_to_disk) 
+          p.customize ['set', :id, '--device-add', 'hdd', '--iface', 'sata','--image', file_to_disk, '--size', "#{secondaryStorage * 1024}"]
+        end
+      end
+
+      if ARGV[0] == "destroy" && Dir.exists?(file_to_disk)
+         Dir.foreach(file_to_disk) {|f| fn = File.join(file_to_disk, f); File.delete(fn) if f != '.' && f != '..'}
+         Dir.delete(file_to_disk)
+      end
+
+    end
+
     master.vm.provider :virtualbox do |v|
       v.name = "db2-express"
       v.customize ["modifyvm", :id, "--memory", "#{ram}"]
       file_to_disk = File.realpath( "." ).to_s + "/" + v.name + "_secondary_hdd.vdi"
       if ARGV[0] == "up" && ! File.exist?(file_to_disk)
-        
         v.customize ['storagectl', :id, '--add', 'sata', '--name', 'SATA', '--portcount', 2, '--hostiocache', 'on']
         v.customize ['createhd', '--filename', file_to_disk, '--format', 'VDI', '--size', "#{secondaryStorage * 1024}"]
         v.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
       end
     end
-    
+
     master.vm.provision :shell, :path => "provision_for_mount_disk.sh"
     master.vm.provision :shell, :path => "db2.sh"
   end
