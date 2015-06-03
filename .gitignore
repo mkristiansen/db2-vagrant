@@ -184,6 +184,10 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+#############
+## Mac OSX
+#############
+
 # Mac crap
 .DS_Store
 
@@ -218,6 +222,10 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#############
+## VirtualBox
+#############
 
 # VirtualBox Files & User stuff
 *.vdi
