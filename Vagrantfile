@@ -17,6 +17,7 @@ privateStartingIp = privateNetworkIp.split(".")[3].to_i
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  # Choose whether to use vaggrant-vbguest plugin to update VirtualBox Guest Additions.
   # Use vagrant-vbguest if the plugin is installed. Choose whether to update VirtualBox Guest Additions.
   if Vagrant.has_plugin?("vagrant-vbguest")  
     config.vbguest.auto_update = false
@@ -35,8 +36,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "db2-express" do |master|
-    #master.vm.network :public_network
-    master.vm.network :private_network, ip: "#{privateSubnet}.#{privateStartingIp}"
+#    master.vm.network :public_network
+    master.vm.network :private_network, ip: "#{privateSubnet}.#{privateStartingIp}", virtualbox__intnet: "db2network"
     master.vm.hostname = "db2-express"
 
     master.vm.provider "vmware_fusion" do |v|
